@@ -1,0 +1,44 @@
+report_id,import_source_name,import_type,total_rows_processed,successful_imports,skipped_rows,duplicate_rows,flagged_for_review,details_json,created_at
+REP-CSV-1792316256433,test_steel_import.csv,CSV Import (materials),1,1,0,0,0,"{""entityType"":""materials"",""importedIds"":[""MAT-STEEL-INDIA-BF""]}",2026-10-18 09:37:36
+REP-CSV-1792317698960,test_steel_import.csv,CSV Import (materials),1,1,0,0,0,"{""entityType"":""materials"",""importedIds"":[""MAT-STEEL-INDIA-BF""]}",2026-10-18 10:01:38
+REP-CSV-1792319322456,test_steel_import.csv,CSV Import (materials),1,1,0,0,0,"{""entityType"":""materials"",""importedIds"":[""MAT-STEEL-INDIA-BF""]}",2026-10-18 10:28:42
+REP-CSV-1792319377168,test_steel_import.csv,CSV Import (materials),1,1,0,0,0,"{""entityType"":""materials"",""importedIds"":[""MAT-STEEL-INDIA-BF""]}",2026-10-18 10:29:37
+REP-CSV-1792325774232,test_steel_import.csv,CSV Import (materials),1,1,0,0,0,"{""entityType"":""materials"",""importedIds"":[""MAT-STEEL-INDIA-BF""]}",2026-10-18 12:16:14
+REP-CSV-1792326008794,test_steel_import.csv,CSV Import (materials),1,1,0,0,0,"{""entityType"":""materials"",""importedIds"":[""MAT-STEEL-INDIA-BF""]}",2026-10-18 12:20:08
+REP-CSV-1792328643969,test_steel_import.csv,CSV Import (materials),1,1,0,0,0,"{""entityType"":""materials"",""importedIds"":[""MAT-STEEL-INDIA-BF""]}",2026-10-18 13:04:03
+REP-PDF-INIT-20261018,Automotive_LCA_Reference_Data_Pack_2026.pdf,PDF Structured Extraction & Seed Pipeline,75,75,0,0,9,"{
+  ""source_document"": ""Automotive Life-Cycle Assessment Reference Data Pack (18 October 2026)"",
+  ""extracted_sections"": [
+    ""Section 1: Scope & functional unit (150,000 km passenger car, kg CO2e/vehicle and g CO2e/km)"",
+    ""Section 2: 10 Material screening emission factor bands + 2 additional BOM materials from Section 3 (Manganese, GFRP)"",
+    ""Section 3: 4 Complete European SWD(2023) 256 vehicle material compositions (ICEV, HEV, PHEV, BEV; 12 material rows each = 48 BOM entries totaling 1,137 kg/vehicle) + 6 subsystem qualitative mappings"",
+    ""Section 4: 15 Manufacturing process energy & CO2 records from PMC10890010 Table 4 + 1 explicit data-gap warning record for Polymer Injection Moulding"",
+    ""Section 5: 12 Energy carrier & fuel-cycle records (including IEA 2024 Hydrogen ranges: 10–12 kg CO2e/kg H2 for natural gas and 22–26 kg CO2e/kg H2 for coal, plus CEA India Grid & fuel pathway definitions)"",
+    ""Section 6: 4 Transportation & logistics mode layers (Road, Rail, Coastal Shipping, Supplier-to-Plant)"",
+    ""Section 7: 3 Use-phase functional unit profiles, 3 End-of-Life allocation systems, and 6 Environmental Impact Indicators"",
+    ""Section 8: 7 Representative vehicle case-study archetypes (Small Petrol Hatchback, Diesel Car/SUV, CNG Car, Full Hybrid HEV, Plug-in Hybrid PHEV, Battery Electric BEV, Hydrogen FCEV)"",
+    ""Section 9: 14 Public research sources registered with full URLs, publishers, years, and extraction status""
+  ],
+  ""flagged_items_for_human_review"": [
+    {
+      ""record_id"": ""PROC-PAINTING / PROC-WELDING / PROC-HVAC-LIGHTING / PROC-HEATING / PROC-COMPRESSED-AIR / PROC-MAT-HANDLING"",
+      ""issue"": ""Allocated facility services in PMC10890010 Table 4 (e.g. Painting = 4,167 MJ & 268 kg CO2/kg processed; Welding = 920 MJ & 62 kg CO2/kg processed)"",
+      ""action_taken"": ""Flagged with is_allocated_facility_service = 1 and blocked from indiscriminate multiplication by total vehicle mass in the calculator.""
+    },
+    {
+      ""record_id"": ""PROC-MOULDING-MISSING"",
+      ""issue"": ""Polymer injection moulding is omitted from PMC10890010 Table 4"",
+      ""action_taken"": ""Registered as an explicit data gap; generic machining factor is NOT substituted.""
+    },
+    {
+      ""record_id"": ""MAT-LIB-PACK"",
+      ""issue"": ""Section 2 does not give a single per-kg factor for Li-ion batteries"",
+      ""action_taken"": ""Registered as requiring chemistry- and pack-specific kWh factor (BatPaC 5.2 / GREET 2025).""
+    },
+    {
+      ""record_id"": ""NRG-GRID-INDIA-CEA & Fuel Factors"",
+      ""issue"": ""Section 5 provides definitions and source links (CEA Baseline Database) rather than a single static number for Indian grid electricity, petrol, diesel, and CNG"",
+      ""action_taken"": ""Registered with null static factor and explicit provenance requiring versioned CEA/government dataset import or user-specified scenario parameter.""
+    }
+  ]
+}",2026-10-19 07:48:34
