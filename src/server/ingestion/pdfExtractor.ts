@@ -1,11 +1,19 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { db, initializeSchema } from '../db/schema.js';
 import { seedDatabase } from '../db/seed.js';
 
-const INTERMEDIATE_DIR = path.resolve(process.cwd(), 'data', 'extracted_intermediate');
-if (!fs.existsSync(INTERMEDIATE_DIR)) {
-  fs.mkdirSync(INTERMEDIATE_DIR, { recursive: true });
+const INTERMEDIATE_DIR = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'extracted_intermediate')
+  : path.resolve(process.cwd(), 'data', 'extracted_intermediate');
+
+try {
+  if (!fs.existsSync(INTERMEDIATE_DIR)) {
+    fs.mkdirSync(INTERMEDIATE_DIR, { recursive: true });
+  }
+} catch {
+  // Ignore on read-only serverless environment
 }
 
 export function generateIntermediateNormalizedJson() {
@@ -34,7 +42,11 @@ export function generateIntermediateNormalizedJson() {
   };
 
   const outPath = path.join(INTERMEDIATE_DIR, 'pdf_reference_pack_normalized.json');
-  fs.writeFileSync(outPath, JSON.stringify(snapshot, null, 2), 'utf-8');
+  try {
+    fs.writeFileSync(outPath, JSON.stringify(snapshot, null, 2), 'utf-8');
+  } catch {
+    // Ignore write failure on read-only filesystem
+  }
   return { outPath, counts };
 }
 

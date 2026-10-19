@@ -426,8 +426,9 @@ app.post('/api/ingestion/commit', (req, res) => {
 });
 
 export { app };
+export default app;
 
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   app.listen(PORT, () => {
     console.log(`Green Auto India LCA Backend Server running on http://localhost:${PORT}`);
   });

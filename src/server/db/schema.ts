@@ -1,16 +1,41 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 
-const DB_DIR = path.resolve(process.cwd(), 'data');
-if (!fs.existsSync(DB_DIR)) {
-  fs.mkdirSync(DB_DIR, { recursive: true });
+const IS_VERCEL = Boolean(process.env.VERCEL);
+const BUNDLED_DB_PATH = path.resolve(process.cwd(), 'data', 'green_auto_india.sqlite');
+
+function resolveDatabasePath(): string {
+  if (process.env.DB_PATH) {
+    return process.env.DB_PATH;
+  }
+  if (IS_VERCEL) {
+    const tmpDbPath = path.join(os.tmpdir(), 'green_auto_india.sqlite');
+    if (!fs.existsSync(tmpDbPath) && fs.existsSync(BUNDLED_DB_PATH)) {
+      try {
+        fs.copyFileSync(BUNDLED_DB_PATH, tmpDbPath);
+      } catch {
+        // Fallback: initializeSchema + seedDatabase will populate tmpDbPath
+      }
+    }
+    return tmpDbPath;
+  }
+  const dbDir = path.resolve(process.cwd(), 'data');
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
+  return path.join(dbDir, 'green_auto_india.sqlite');
 }
 
-const DB_PATH = process.env.DB_PATH || path.join(DB_DIR, 'green_auto_india.sqlite');
+const DB_PATH = resolveDatabasePath();
 
 export const db = new Database(DB_PATH);
-db.pragma('journal_mode = WAL');
+try {
+  db.pragma('journal_mode = WAL');
+} catch {
+  // Fallback if filesystem does not support WAL shm/wal files
+}
 db.pragma('foreign_keys = ON');
 
 export function initializeSchema(database: Database.Database = db) {
